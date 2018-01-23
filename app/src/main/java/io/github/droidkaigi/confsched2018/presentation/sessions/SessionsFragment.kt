@@ -15,6 +15,7 @@ import io.github.droidkaigi.confsched2018.databinding.FragmentSessionsBinding
 import io.github.droidkaigi.confsched2018.di.Injectable
 import io.github.droidkaigi.confsched2018.model.Room
 import io.github.droidkaigi.confsched2018.presentation.Result
+import io.github.droidkaigi.confsched2018.presentation.common.view.TabReelectedListener
 import io.github.droidkaigi.confsched2018.util.ProgressTimeLatch
 import io.github.droidkaigi.confsched2018.util.ext.observe
 import timber.log.Timber
@@ -75,6 +76,7 @@ class SessionsFragment : Fragment(), Injectable {
         lifecycle.addObserver(sessionsViewModel)
 
         binding.tabLayout.setupWithViewPager(binding.sessionsViewPager)
+        binding.tabLayout.addOnTabSelectedListener(TabReelectedListener(binding.sessionsViewPager))
     }
 
     companion object {
@@ -88,6 +90,7 @@ class SessionsViewPagerAdapter(
 
     private val tabs = arrayListOf<Tab>()
     private var roomTabs = mutableListOf<Tab.RoomTab>()
+    private val fragments = mutableListOf<Fragment>()
 
     sealed class Tab(val title: String) {
         object All : Tab("All")
@@ -98,22 +101,18 @@ class SessionsViewPagerAdapter(
         tabs.clear()
         tabs.add(Tab.All)
         tabs.addAll(roomTabs)
+
+        fragments.add(AllSessionsFragment.newInstance())
+        tabs.filterIsInstance<Tab.RoomTab>()
+                .mapTo(fragments) {
+                    RoomSessionsFragment.newInstance(it.room)
+                }
         notifyDataSetChanged()
     }
 
     override fun getPageTitle(position: Int): CharSequence = tabs[position].title
 
-    override fun getItem(position: Int): Fragment {
-        val tab = tabs[position]
-        return when (tab) {
-            Tab.All -> {
-                AllSessionsFragment.newInstance()
-            }
-            is Tab.RoomTab -> {
-                RoomSessionsFragment.newInstance(tab.room)
-            }
-        }
-    }
+    override fun getItem(position: Int): Fragment = fragments[position]
 
     override fun getCount(): Int = tabs.size
 

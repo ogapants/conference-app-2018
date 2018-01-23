@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,13 +16,14 @@ import io.github.droidkaigi.confsched2018.di.Injectable
 import io.github.droidkaigi.confsched2018.presentation.NavigationController
 import io.github.droidkaigi.confsched2018.presentation.Result
 import io.github.droidkaigi.confsched2018.presentation.common.itemdecoration.StickyHeaderItemDecoration
+import io.github.droidkaigi.confsched2018.presentation.common.view.ViewPagerItem
 import io.github.droidkaigi.confsched2018.presentation.search.item.SpeakerItem
 import io.github.droidkaigi.confsched2018.presentation.search.item.SpeakersSection
 import io.github.droidkaigi.confsched2018.util.ext.observe
 import timber.log.Timber
 import javax.inject.Inject
 
-class SearchSpeakersFragment : Fragment(), Injectable {
+class SearchSpeakersFragment : Fragment(), Injectable, ViewPagerItem {
 
     private var fireBaseAnalytics: FirebaseAnalytics? = null
     private lateinit var binding: FragmentSearchSpeakersBinding
@@ -97,6 +99,8 @@ class SearchSpeakersFragment : Fragment(), Injectable {
                     }
                 }))
     }
+
+    override fun getRecyclerView(): RecyclerView = binding.searchSessionRecycler
 
     companion object {
         fun newInstance(): SearchSpeakersFragment = SearchSpeakersFragment()

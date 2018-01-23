@@ -21,6 +21,7 @@ import io.github.droidkaigi.confsched2018.di.Injectable
 import io.github.droidkaigi.confsched2018.model.Session
 import io.github.droidkaigi.confsched2018.presentation.NavigationController
 import io.github.droidkaigi.confsched2018.presentation.Result
+import io.github.droidkaigi.confsched2018.presentation.common.view.ViewPagerItem
 import io.github.droidkaigi.confsched2018.presentation.sessions.item.DateSessionsSection
 import io.github.droidkaigi.confsched2018.presentation.sessions.item.SpeechSessionItem
 import io.github.droidkaigi.confsched2018.util.ProgressTimeLatch
@@ -37,7 +38,7 @@ import timber.log.Timber
 import java.util.Date
 import javax.inject.Inject
 
-class AllSessionsFragment : Fragment(), Injectable {
+class AllSessionsFragment : Fragment(), Injectable, ViewPagerItem {
 
     private var fireBaseAnalytics: FirebaseAnalytics? = null
     private lateinit var binding: FragmentAllSessionsBinding
@@ -141,6 +142,8 @@ class AllSessionsFragment : Fragment(), Injectable {
         TransitionManager.beginDelayedTransition(binding.sessionsConstraintLayout, transition)
         binding.dayHeader.setVisible(visibleDayHeader)
     }
+
+    override fun getRecyclerView(): RecyclerView = binding.sessionsRecycler
 
     companion object {
         fun newInstance(): AllSessionsFragment = AllSessionsFragment()
