@@ -69,7 +69,7 @@ class SearchSpeakersFragment : Fragment(), Injectable, ViewPagerItem {
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
-        if (isVisibleToUser) {
+        if (isVisibleToUser && activity != null) {
             fireBaseAnalytics?.setCurrentScreen(activity!!, null, this::class.java.simpleName)
         }
     }
